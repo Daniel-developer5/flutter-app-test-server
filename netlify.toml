@@ -1,11 +1,10 @@
 [build]
-  command```
-  command = "npm start"  # Команда для збірки вашого проекту, якщо потрібно
+  command = "npm i && npm start"
 
 [functions]
-  directory = "functions"  # Шлях до каталогу з функціями
+  directory = "functions"
 
 [[redirects]]
-  from = "/*"  # Шаблон URL, на який буде спрацьовувати редирект
-  to = "/"  # Шлях до головного HTML-файлу вашого проекту
-  status = 200 
+  from = "/*"
+  to = "/"
+  status = 200
