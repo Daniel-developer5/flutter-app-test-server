@@ -1,5 +1,5 @@
 [build]
-  command = "npm i && npm start"
+  command = "npm i"
 
 [functions]
   directory = "functions"

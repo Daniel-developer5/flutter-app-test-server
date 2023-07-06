@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "netlify": "node functions/server/index.js"
   },
   "author": "Daniel Mudrak <daniel.mudrak2005@gmail.com>",
   "license": "ISC",
