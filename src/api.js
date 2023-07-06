@@ -1,11 +1,14 @@
 const express = require('express')
 const app = express()
+const serverless = require('serverless-http')
 const PORT = 3000 || process.env.PORT
+
+const router = express.Router();
 
 app.use(require('cors')())
 app.use(express.json())
 
-app.get('/', (_, res) => {
+router.get('/', (_, res) => {
   res.send('Flutter Prawnik Test Server')
 })
 
@@ -17,4 +20,9 @@ app.post('/message', (req, res) => {
   res.send({ status: 200 })
 })
 
-app.listen(PORT)
+app.use(`/.netlify/functions/api`, router);
+
+// app.listen(PORT)
+
+module.exports = app;
+module.exports.handler = serverless(app)

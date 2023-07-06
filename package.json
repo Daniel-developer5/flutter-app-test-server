@@ -7,13 +7,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "netlify": "node functions/server/index.js"
+    "netlify": "node functions/server/index.js",
+    "build": "netlify functions:build --src=src"
   },
   "author": "Daniel Mudrak <daniel.mudrak2005@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "netlify-lambda": "^2.0.16",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
