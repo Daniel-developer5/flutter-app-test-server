@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const serverless = require('serverless-http')
 const PORT = 3000 || process.env.PORT
+const fs = require('fs/promises')
 
 const router = express.Router();
 
@@ -12,17 +13,18 @@ router.get('/', (_, res) => {
   res.send('Flutter Prawnik Test Server')
 })
 
-app.post('/message', (req, res) => {
+router.post('/message', async (req, res) => {
   const { body } = req
-
-  console.log(body)
-
-  res.send({ status: 200 })
+  
+  try {
+    await fs.writeFile('messages.json', JSON.stringify(body))
+    res.send({ status: 200 })
+  } catch (err) {
+    console.error(err)
+  }
 })
 
-app.use(`/.netlify/functions/api`, router);
+app.use('/', router);
+// app.use(`/.netlify/functions/api`, router);
 
-// app.listen(PORT)
-
-module.exports = app;
-module.exports.handler = serverless(app)
+app.listen(PORT)

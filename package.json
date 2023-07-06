@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "netlify functions:serve",
-    "dev": "nodemon index.js",
-    "netlify": "node functions/server/index.js",
+    "dev": "nodemon src/api.js",
     "build": "netlify functions:build --src=src"
   },
   "author": "Daniel Mudrak <daniel.mudrak2005@gmail.com>",

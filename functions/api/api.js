@@ -11,12 +11,15 @@ router.get('/', (_, res) => {
   res.send('Flutter Prawnik Test Server')
 })
 
-router.post('/message', (req, res) => {
+router.post('/message', async (req, res) => {
   const { body } = req
-
-  console.log(body)
-
-  res.send({ status: 200 })
+  
+  try {
+    await fs.writeFile('messages.json', JSON.stringify(body))
+    res.send({ status: 200 })
+  } catch (err) {
+    console.error(err)
+  }
 })
 
 app.use(`/.netlify/functions/api`, router)
