@@ -17,7 +17,7 @@ app.post('/message', (req, res) => {
   res.send({ status: 200 })
 })
 
-app.listen(PORT)
+// app.listen(PORT)
 
 exports.handler = async (event, context) => {
   const response = await app(event, context)
