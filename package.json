@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
+    "start": "netlify functions:serve",
     "dev": "nodemon index.js",
     "netlify": "node functions/server/index.js",
     "build": "netlify functions:build --src=src"
