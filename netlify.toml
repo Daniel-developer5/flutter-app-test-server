@@ -1,10 +1,5 @@
 [build]
-  command = "npm i"
+  functions = "functions"
 
-[functions]
-  directory = "functions"
-
-[[redirects]]
-  from = "/*"
-  to = "/"
-  status = 200
+[dev]
+  publish = "dist"
