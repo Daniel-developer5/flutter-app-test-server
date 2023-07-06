@@ -1,12 +1,17 @@
 const express = require('express')
 const app = express()
 const serverless = require('serverless-http')
+const bodyParser = require('body-parser')
 const PORT = 3000 || process.env.PORT
 
-const router = express.Router();
+const router = express.Router()
 
 app.use(require('cors')())
 app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+
+require('dotenv').config()
 
 const usersDb = {
   /**
@@ -80,7 +85,69 @@ router.post('/log-in', (req, res) => {
   }
 })
 
-app.use('/', router);
-// app.use(`/.netlify/functions/api`, router);
+router.post('/admin', (req, res) => {
+  const { login, password } = req.body
+
+  if (login === process.env.ADMIN_LOGIN && password === process.env.ADMIN_PASSWORD) {
+    const html = `
+      <style>
+        * { font-family: Arial; }
+
+        ul {
+          list-style-type: none;
+          padding: 0;
+          margin: 12px 0;
+          display: grid;
+          gap:10px;
+        }
+
+        li {
+          padding: 10px;
+          border: 1px solid #333;
+          background-color: #eee;
+          display: grid;
+          gap: 10px;
+          margin: 0;
+        }
+
+        li p {
+          margin: 0;
+        }
+
+        li p span {
+          font-weight: bold;
+        }
+      </style>
+
+      <h3>Messages:</h3>
+      <ul>
+        ${messagesDb.map(msg => `<li>
+          <p><span>Email: </span> ${msg.email}</p>
+          <p><span>Category: </span> ${msg.category}</p>
+          <p><span>Message: </span> ${msg.message}</p>
+        </li>`).join(' ')}
+      </ul>
+      <h3>Users:</h3>
+      <ul>
+        ${usersDb.users.map(user => `<li>
+          <p><span>Email: </span> ${user.email}</p>
+          <p><span>Name: </span> ${user.name}</p>
+        </li>`).join(' ')}
+      </ul>
+    `
+
+    res.send(html)
+  }
+
+  res.send('Credentials are incorrect.')
+})
+
+router.get('*', (req, res) => {
+  res.sendFile('dist/index.html')
+})
+
+app.use(express.static('dist'))
+app.use('/', router)
+// app.use(`/.netlify/functions/api`, router)
 
 app.listen(PORT)

@@ -3,9 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    form {
+      display: grid;
+      gap: 10px;
+      max-width: 500px;
+    }
+
+    input, button {
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 16px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+  </style>
   <title>Test Server</title>
 </head>
 <body>
-  Test server for the Flutter App
+  <form action="/.netlify/functions/api/admin" method="post">
+    <input type="text" placeholder="login" name="login" />
+    <input type="password" placeholder="password" name="password" />
+    <button>Send</button>
+  </form>
 </body>
 </html>
