@@ -11,7 +11,7 @@ router.get('/', (_, res) => {
   res.send('Flutter Prawnik Test Server')
 })
 
-app.post('/message', (req, res) => {
+router.post('/message', (req, res) => {
   const { body } = req
 
   console.log(body)
