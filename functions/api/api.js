@@ -19,7 +19,7 @@ app.post('/message', (req, res) => {
   res.send({ status: 200 })
 })
 
-// app.use(`/.netlify/functions/api`, router)
+app.use(`/.netlify/functions/api`, router)
 
 const handler = serverless(app)
 module.exports = { handler }
