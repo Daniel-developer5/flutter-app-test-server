@@ -3,15 +3,24 @@ const app = express()
 const serverless = require('serverless-http')
 const bodyParser = require('body-parser')
 const PORT = 3000 || process.env.PORT
+const cloudinary = require('cloudinary')
+const { join } = require('path')
 
 const router = express.Router()
 
 app.use(require('cors')())
 app.use(express.json())
+app.use(require('express-fileupload')())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 require('dotenv').config()
+
+cloudinary.config({ 
+  cloud_name: 'dtxigsrtn', 
+  api_key: '176125755111887', 
+  api_secret: process.env.CLOUDINARY_API_SECRET, 
+})
 
 const usersDb = {
   /**
@@ -142,8 +151,46 @@ router.post('/admin', (req, res) => {
   res.send('Credentials are incorrect.')
 })
 
+const imagesDb = {}
+
+router.post('/image', async (req, res) => {
+  const { image } = req.files
+  const imageExt = image.name.split('.').slice(-1)[0]
+  const user = req.body.user
+
+  try {
+    const path = `data:image/${imageExt};base64,${image.data.toString('base64')}`
+    const result = await cloudinary.v2.uploader.upload(path, {
+      folder: 'images',
+      use_filename: true,
+    })
+
+    if (imagesDb[user]) {
+      imagesDb[user].push(result.secure_url)
+    } else {
+      imagesDb[user] = []
+      imagesDb[user].push(result.secure_url)
+    }
+
+    console.log(imagesDb)
+    res.send({ secureUrl: result.secure_url, })
+  } catch (error) {
+    throw Error(error)
+  }
+})
+
+router.get('/get-images/:id', async (req, res) => {
+  const { id } = req.params
+
+  if (imagesDb[id]) {
+    res.send({ images: imagesDb[id] })
+  } else {
+    res.send([])
+  }
+})
+
 router.get('*', (req, res) => {
-  res.sendFile('dist/index.html')
+  res.sendFile(join(__dirname, '../', 'dist', 'index.html'))
 })
 
 app.use(express.static('dist'))
