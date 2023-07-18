@@ -126,6 +126,18 @@ router.post('/admin', (req, res) => {
         li p span {
           font-weight: bold;
         }
+
+        .gallery {
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .gallery img {
+          dosplay: block;
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+        }
       </style>
 
       <h3>Messages:</h3>
@@ -143,6 +155,13 @@ router.post('/admin', (req, res) => {
           <p><span>Name: </span> ${user.name}</p>
         </li>`).join(' ')}
       </ul>
+      <h3>Images:</h3>
+      <div>
+        ${Object.entries(imagesDb).map(([ user, images ]) => `
+          <h5>${user}</h5>
+          <div class="gallery">${images.map(img => `<img src="${img}" />`).join(' ')}</div>
+        `).join(' ')}
+      </div>
     `
 
     res.send(html)
@@ -185,7 +204,7 @@ router.get('/get-images/:id', async (req, res) => {
   if (imagesDb[id]) {
     res.send({ images: imagesDb[id] })
   } else {
-    res.send([])
+    res.send({ images: [] })
   }
 })
 
