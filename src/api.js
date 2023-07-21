@@ -208,6 +208,54 @@ router.get('/get-images/:id', async (req, res) => {
   }
 })
 
+const Client = require('ssh2-sftp-client')
+const sftp = new Client()
+
+const uploadToSftp = async (image, mode) => {
+  try {
+    const imageExt = image.name.split('.').slice(-1)[0]
+    const path = `data:image/${imageExt};base64,${image.data.toString('base64')}`
+
+    console.log({
+      host: 'nightsky.perseida.dev',
+      port: '22',
+      username: process.env[+mode === 1 ? 'SFTP_USER1' : 'SFTP_USER'],
+      password: process.env[+mode === 1 ? 'SFTP_PASS1' : 'SFTP_PASS'],
+    })
+
+    await sftp.connect({
+      host: 'nightsky.perseida.dev',
+      port: '22',
+      username: process.env[+mode === 1 ? 'SFTP_USER1' : 'SFTP_USER'],
+      password: process.env[+mode === 1 ? 'SFTP_PASS1' : 'SFTP_PASS'],
+    })
+
+    console.log(Buffer.from(path, 'base64'))
+    await sftp.put(Buffer.from(path, 'base64'), '/images-temp')
+
+    console.log('connected')
+  } catch (error) {
+    console.error(error)
+  } finally {
+    sftp.end()
+  }
+}
+
+router.post('/publish-image', async (req, res) => {
+  const { image } = req.files
+  const { mode } = req.body
+  // const user = req.body.user
+
+  try {
+    console.log(mode)
+    uploadToSftp(image)
+
+    res.send({ success: true, })
+  } catch (error) {
+    throw Error(error)
+  }
+})
+
 router.get('*', (req, res) => {
   res.sendFile(join(__dirname, '../', 'dist', 'index.html'))
 })
