@@ -200,7 +200,7 @@ const uploadToSftp = async (image, mode) => {
   try {
     const imageExt = image.name.split('.').slice(-1)[0]
     const path = `data:image/${imageExt};base64,${image.data.toString('base64')}`
-
+    console.log(mode, process.env[+mode === 1 ? 'SFTP_USER1' : 'SFTP_USER']);
     console.log({
       host: 'nightsky.perseida.dev',
       port: '22',
@@ -215,10 +215,8 @@ const uploadToSftp = async (image, mode) => {
       password: process.env[+mode === 1 ? 'SFTP_PASS1' : 'SFTP_PASS'],
     })
 
-    console.log(Buffer.from(path, 'base64'))
     await sftp.put(Buffer.from(path, 'base64'), '/images-temp')
 
-    console.log('connected')
   } catch (error) {
     console.error(error)
   } finally {
